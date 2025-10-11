@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HypnoTools.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e876ef0a6e7c2d5582aa0353949c24099dd71e13")]
 [assembly: System.Reflection.AssemblyProductAttribute("HypnoTools.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HypnoTools.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

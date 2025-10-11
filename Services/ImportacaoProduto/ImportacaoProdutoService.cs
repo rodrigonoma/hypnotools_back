@@ -1,6 +1,8 @@
 using HypnoTools.API.Models.ERP;
 using HypnoTools.API.Models.ImportacaoProduto;
 using HypnoTools.API.Services.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -71,8 +73,45 @@ public class ImportacaoProdutoService : IImportacaoProdutoService
                 };
             }
 
+            // Extrair empresa do token JWT
+            string? companyAlias = null;
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                // Empresa é armazenada como ClaimTypes.Role no HypnoCore Auth API
+                companyAlias = jwtToken.Claims.FirstOrDefault(x =>
+                    x.Type == ClaimTypes.Role ||
+                    x.Type == "role" ||
+                    x.Type == "empresa" ||
+                    x.Type == "Empresa")?.Value;
+
+                _logger.LogDebug("Extracted company from JWT token (ClaimTypes.Role): {Company}", companyAlias ?? "NOT FOUND");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to extract company from JWT token");
+            }
+
+            if (string.IsNullOrEmpty(companyAlias))
+            {
+                _logger.LogError("Company information not found in JWT token");
+                return new ImportacaoResultModel
+                {
+                    Success = false,
+                    Message = "Informação da empresa não encontrada no token de autenticação",
+                    Erros = new List<string> { "Claim 'empresa' não encontrada no token JWT" }
+                };
+            }
+
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            // CRITICAL: Add "Empresa" header - required for TRS-API to forward to Transacional-Proposta
+            _httpClient.DefaultRequestHeaders.Add("Empresa", companyAlias);
+
+            _logger.LogInformation("Sending import request for company '{Company}'", companyAlias);
 
             // Transform ERP data to ImportacaoProdutoRequestModel format
             var importacaoData = TransformarDadosERP(codigoObra, $"Obra_{codigoObra}", unidades);

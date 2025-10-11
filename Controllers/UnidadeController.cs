@@ -42,8 +42,8 @@ public class UnidadeController : ControllerBase
     {
         try
         {
-            _logger.LogInformation("Starting unit external ID update for product {IdProduto} with {Count} units",
-                request?.IdProduto ?? 0, request?.Unidades?.Count ?? 0);
+            _logger.LogInformation("Starting unit external ID update for product {IdProduto} with {Count} units and CodigoObra: {CodigoObra}",
+                request?.IdProduto ?? 0, request?.Unidades?.Count ?? 0, request?.CodigoObra ?? "NULL");
 
             // Validar requisição
             if (request == null || request.Unidades == null || request.Unidades.Count == 0)
@@ -294,6 +294,7 @@ public class AtualizarIdExternoUnidade
 public class AtualizarIdExternoRequest
 {
     public int IdProduto { get; set; }
+    public string CodigoObra { get; set; } = string.Empty;
     public List<AtualizarIdExternoUnidade> Unidades { get; set; } = new();
 }
 

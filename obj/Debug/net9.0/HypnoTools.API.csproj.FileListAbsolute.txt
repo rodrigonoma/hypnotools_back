@@ -126,6 +126,7 @@ C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\HypnoTools.API.AssemblyInf
 C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\HypnoTools.API.csproj.CoreCompileInputs.cache
 C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\HypnoTools.API.MvcApplicationPartsAssemblyInfo.cs
 C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\HypnoTools.API.MvcApplicationPartsAssemblyInfo.cache
+C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\HypnoTools.API.sourcelink.json
 C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\scopedcss\bundle\HypnoTools.API.styles.css
 C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\staticwebassets.build.json
 C:\HypnoTools\Backend\HypnoTools.API\obj\Debug\net9.0\staticwebassets.development.json

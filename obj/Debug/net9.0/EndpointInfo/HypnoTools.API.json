@@ -849,6 +849,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "codigoObra": {
+            "type": "string",
+            "nullable": true
+          },
           "unidades": {
             "type": "array",
             "items": {
