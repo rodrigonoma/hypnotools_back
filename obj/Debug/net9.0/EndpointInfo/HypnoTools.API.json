@@ -719,6 +719,54 @@
         }
       }
     },
+    "/api/ImportacaoProduto/importar-estrutura": {
+      "post": {
+        "tags": [
+          "ImportacaoProduto"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportacaoProdutoRequestModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportacaoProdutoRequestModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportacaoProdutoRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportacaoProdutoResponseModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportacaoProdutoResponseModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportacaoProdutoResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Unidade/atualizar-id-externo": {
       "post": {
         "tags": [
@@ -1271,6 +1319,59 @@
         },
         "additionalProperties": false
       },
+      "ImportacaoProdutoRequestModel": {
+        "type": "object",
+        "properties": {
+          "idProduto": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "torres": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TorreModel"
+            },
+            "nullable": true
+          },
+          "tipologias": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TipologyModel"
+            },
+            "nullable": true
+          },
+          "unidades": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnidadeModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImportacaoProdutoResponseModel": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalUnidades": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ImportacaoResultModel": {
         "type": "object",
         "properties": {
@@ -1366,6 +1467,10 @@
             "format": "date-time",
             "nullable": true
           },
+          "dtfim_obr": {
+            "type": "string",
+            "nullable": true
+          },
           "idProduto": {
             "type": "integer",
             "format": "int32",
@@ -1432,6 +1537,99 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "TipologyModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "tipology": {
+            "type": "string",
+            "nullable": true
+          },
+          "usable_Area": {
+            "type": "string",
+            "nullable": true
+          },
+          "total_Area": {
+            "type": "string",
+            "nullable": true
+          },
+          "padrao": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "id_Externo": {
+            "type": "string",
+            "nullable": true
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TipologyPropertyModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TipologyPropertyModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TorreModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "qty_Floors": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qty_Columns": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "delivery_Date": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "ground_Floor": {
+            "type": "string",
+            "nullable": true
+          },
+          "unit_Pattern": {
+            "type": "string",
+            "nullable": true
+          },
+          "id_Externo": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "TransformacaoERPRequest": {
         "type": "object",
@@ -1502,7 +1700,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": { }
       },
       "UnidadeImportacaoModel": {
         "type": "object",
@@ -1541,6 +1739,67 @@
           "andar": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UnidadeModel": {
+        "type": "object",
+        "properties": {
+          "id_Torre": {
+            "type": "string",
+            "nullable": true
+          },
+          "id_Tipologia": {
+            "type": "string",
+            "nullable": true
+          },
+          "floor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unity_Number": {
+            "type": "string",
+            "nullable": true
+          },
+          "unity_Number_Custom": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "cadastrar": {
+            "type": "boolean"
+          },
+          "percentage_Unity": {
+            "type": "string",
+            "nullable": true
+          },
+          "fase": {
+            "type": "string",
+            "nullable": true
+          },
+          "vaga": {
+            "type": "string",
+            "nullable": true
+          },
+          "deposito": {
+            "type": "string",
+            "nullable": true
+          },
+          "area_Deposito": {
+            "type": "string",
+            "nullable": true
+          },
+          "fracao_Ideal": {
+            "type": "string",
+            "nullable": true
+          },
+          "id_Externo": {
+            "type": "string",
             "nullable": true
           }
         },

@@ -143,15 +143,21 @@ public class ERPIntegrationService : IERPIntegrationService
 
             _logger.LogInformation("Requesting active projects for empresa {Empresa}", empresa);
 
-            var response = await _httpClient.GetAsync($"api/ERP/obter-obras-ativas/{empresa}");
-            var responseContent = await response.Content.ReadAsStringAsync();
+            // Usar HttpCompletionOption.ResponseHeadersRead para começar a processar antes de receber tudo
+            var response = await _httpClient.GetAsync(
+                $"api/ERP/obter-obras-ativas/{empresa}",
+                HttpCompletionOption.ResponseHeadersRead);
 
             if (response.IsSuccessStatusCode)
             {
+                // Usar streaming para processar a resposta de forma mais eficiente
+                using var stream = await response.Content.ReadAsStreamAsync();
+
                 // CRM-API agora retorna ObraAtivaDto com camelCase e IdProduto
-                var obrasAtivas = JsonSerializer.Deserialize<List<ObraAtivaModel>>(responseContent, new JsonSerializerOptions
+                var obrasAtivas = await JsonSerializer.DeserializeAsync<List<ObraAtivaModel>>(stream, new JsonSerializerOptions
                 {
-                    PropertyNameCaseInsensitive = true
+                    PropertyNameCaseInsensitive = true,
+                    DefaultBufferSize = 128 * 1024 // Buffer de 128KB para leitura mais eficiente
                 }) ?? new List<ObraAtivaModel>();
 
                 _logger.LogInformation("Retrieved {Count} active projects for empresa {Empresa}", obrasAtivas.Count, empresa);
@@ -167,8 +173,9 @@ public class ERPIntegrationService : IERPIntegrationService
                 return obrasAtivas;
             }
 
+            var errorContent = await response.Content.ReadAsStringAsync();
             _logger.LogWarning("Failed to get active projects. Status: {StatusCode}, Response: {Response}",
-                response.StatusCode, responseContent);
+                response.StatusCode, errorContent);
 
             return new List<ObraAtivaModel>();
         }

@@ -36,9 +36,23 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 
+// Configurar HttpClient com timeout estendido para o ERPIntegrationService
+builder.Services.AddHttpClient<IERPIntegrationService, ERPIntegrationService>(client =>
+{
+    // Aumentar timeout para 5 minutos (útil para respostas grandes)
+    client.Timeout = TimeSpan.FromMinutes(5);
+    // Aumentar tamanho máximo de buffer de conteúdo (100MB)
+    client.MaxResponseContentBufferSize = 100 * 1024 * 1024;
+})
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    // Habilitar compressão automática
+    AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+});
+
 // Add custom services
 builder.Services.AddScoped<IHypnoCoreAuthService, HypnoCoreAuthService>();
-builder.Services.AddScoped<IERPIntegrationService, ERPIntegrationService>();
+// ERPIntegrationService já registrado acima com HttpClient configurado
 builder.Services.AddScoped<IImportacaoProdutoService, ImportacaoProdutoService>();
 
 // Add JWT Authentication - Usar a mesma chave do HypnoCore

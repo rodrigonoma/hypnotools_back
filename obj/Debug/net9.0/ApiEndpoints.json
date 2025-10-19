@@ -353,6 +353,32 @@
   },
   {
     "ContainingType": "HypnoTools.API.Controllers.ImportacaoProdutoController",
+    "Method": "ImportarEstruturaProduto",
+    "RelativePath": "api/ImportacaoProduto/importar-estrutura",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "HypnoTools.API.Models.ImportacaoProduto.ImportacaoProdutoRequestModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HypnoTools.API.Models.ImportacaoProduto.ImportacaoProdutoResponseModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HypnoTools.API.Controllers.ImportacaoProdutoController",
     "Method": "ImportarProdutoERP",
     "RelativePath": "api/ImportacaoProduto/importar-produto-erp",
     "HttpMethod": "POST",

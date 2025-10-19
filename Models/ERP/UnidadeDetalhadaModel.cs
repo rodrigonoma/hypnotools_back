@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace HypnoTools.API.Models.ERP;
 
 public class UnidadeDetalhadaModel
@@ -12,4 +14,10 @@ public class UnidadeDetalhadaModel
     public string Status { get; set; } = string.Empty;
     public string? TipoUnidade { get; set; }
     public int? Andar { get; set; }
+
+    /// <summary>
+    /// Campos personalizados dinâmicos (c1_unid, c2_unid, etc.)
+    /// </summary>
+    [JsonExtensionData]
+    public Dictionary<string, object>? CamposExtras { get; set; }
 }

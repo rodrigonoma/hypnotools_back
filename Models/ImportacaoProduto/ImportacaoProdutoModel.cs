@@ -27,3 +27,23 @@ public class ImportacaoResultModel
     public int UnidadesImportadas { get; set; }
     public List<string> Erros { get; set; } = new();
 }
+
+public class ImportacaoProdutoHypnotoolsResponseModel
+{
+    public bool Success { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public int TotalUnidades { get; set; }
+    public int UnidadesImportadas { get; set; }
+    public int UnidadesNaoAtualizadas { get; set; }
+    public List<UnidadeNaoAtualizadaModel> UnidadesComRestricao { get; set; } = new();
+}
+
+public class UnidadeNaoAtualizadaModel
+{
+    public string IdExterno { get; set; } = string.Empty;
+    public string NumeroUnidade { get; set; } = string.Empty;
+    public string Torre { get; set; } = string.Empty;
+    public int Status { get; set; }
+    public string NomeStatus { get; set; } = string.Empty;
+    public string Motivo { get; set; } = string.Empty;
+}

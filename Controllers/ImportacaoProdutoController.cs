@@ -141,6 +141,82 @@ public class ImportacaoProdutoController : ControllerBase
             });
         }
     }
+
+    /// <summary>
+    /// Importa estrutura completa de produto (Torres, Tipologias, Unidades) via HypnoCore
+    /// </summary>
+    [HttpPost("importar-estrutura")]
+    public async Task<ActionResult<ImportacaoProdutoResponseModel>> ImportarEstruturaProduto(
+        [FromBody] ImportacaoProdutoRequestModel request)
+    {
+        try
+        {
+            if (request.IdProduto <= 0)
+            {
+                return BadRequest(new ImportacaoProdutoResponseModel
+                {
+                    Success = false,
+                    Message = "ID do produto é obrigatório"
+                });
+            }
+
+            if (request.Torres == null || !request.Torres.Any())
+            {
+                return BadRequest(new ImportacaoProdutoResponseModel
+                {
+                    Success = false,
+                    Message = "Pelo menos uma torre deve ser informada"
+                });
+            }
+
+            if (request.Tipologias == null || !request.Tipologias.Any())
+            {
+                return BadRequest(new ImportacaoProdutoResponseModel
+                {
+                    Success = false,
+                    Message = "Pelo menos uma tipologia deve ser informada"
+                });
+            }
+
+            if (request.Unidades == null || !request.Unidades.Any())
+            {
+                return BadRequest(new ImportacaoProdutoResponseModel
+                {
+                    Success = false,
+                    Message = "Pelo menos uma unidade deve ser informada"
+                });
+            }
+
+            _logger.LogInformation("Iniciando importação de estrutura para produto ID {IdProduto}", request.IdProduto);
+            _logger.LogInformation("Torres: {TorresCount}, Tipologias: {TipologiasCount}, Unidades: {UnidadesCount}",
+                request.Torres.Count, request.Tipologias.Count, request.Unidades.Count);
+
+            var resultado = await _importacaoService.ImportarEstruturaProdutoAsync(request);
+
+            if (resultado.Success)
+            {
+                _logger.LogInformation("Importação concluída com sucesso para produto ID {IdProduto}", request.IdProduto);
+                return Ok(resultado);
+            }
+            else
+            {
+                _logger.LogWarning("Importação falhou para produto ID {IdProduto}: {Message}",
+                    request.IdProduto, resultado.Message);
+                return BadRequest(resultado);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao importar estrutura do produto ID {IdProduto}", request.IdProduto);
+
+            return StatusCode(500, new ImportacaoProdutoResponseModel
+            {
+                Success = false,
+                Message = "Erro interno ao processar importação",
+                Error = ex.Message
+            });
+        }
+    }
 }
 
 public class TransformacaoERPRequest
